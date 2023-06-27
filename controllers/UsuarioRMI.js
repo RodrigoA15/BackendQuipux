@@ -14,14 +14,10 @@ exports.allUsers = async (req, res) => {
 };
 
 exports.ip = (req, res) => {
-  // const ip = req.connection.remoteAddress;
+  const ip = req.connection.remoteAddress;
 
-  // // Verifica si la dirección IP es IPv6 y obtiene solo la parte IPv4
-  // const ipv4Address = ip.includes(":") ? ip.split(":").slice(-1)[0] : ip;
+  // Verifica si la dirección IP es IPv6 y obtiene solo la parte IPv4
+  const ipv4Address = ip.includes(":") ? ip.split(":").slice(-1)[0] : ip;
 
-  // res.json(`Dirección IPv4 del cliente: ${ipv4Address} `);
-
-  // Resto del código de tu API
-  // ...
+  res.json(`Dirección IPv4 del cliente: ${ipv4Address} `);
 };
-

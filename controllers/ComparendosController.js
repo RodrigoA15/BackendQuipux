@@ -5,7 +5,7 @@ exports.comparendos = async (req, res) => {
   try {
     let { NRO_COMPARENDO_MOROSO } = req.params;
     const resultados = await sequelize.query(
-      "SELECT * FROM MOROSOS WHERE NRO_COMPARENDO_MOROSO = :NRO_COMPARENDO_MOROSO ",
+      "SELECT * FROM MOROSOS INNER JOIN COMPARENDOS ON MOROSOS.NRO_COMPARENDO_MOROSO = COMPARENDOS.NRO_COMPARENDO WHERE NRO_COMPARENDO_MOROSO = :NRO_COMPARENDO_MOROSO  ",
       {
         replacements: { NRO_COMPARENDO_MOROSO },
         type: QueryTypes.SELECT,
