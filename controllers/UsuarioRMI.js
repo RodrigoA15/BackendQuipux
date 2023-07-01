@@ -1,6 +1,8 @@
 const sequelize = require("../config/Connection.js");
 const { QueryTypes } = require("sequelize");
 const QX_USUARIO = require("../models/QX_USUARIO.js");
+const USUARIOS_TTO_DIRECCIONES = require("../models/Direcciones/USUARIOS_TTO_DIRECCIONES.js");
+const LIC_CONDUCCION = require("../models/Licencias_Conduccion/LIC_CONDUCCION.js");
 
 // exports.allUsers = async (req, res) => {
 //   try {
@@ -26,9 +28,29 @@ exports.ip = (req, res) => {
 exports.allUsers = async (req, res) => {
   // let hola1 = req.params.hola1;
   try {
-    const hola1 = await QX_USUARIO.findAll();
-    console.log(hola1);
+    const hola1 = await USUARIOS_TTO_DIRECCIONES.findAll();
+    res.json(hola1);
   } catch (error) {
     console.log(error);
   }
 };
+
+// exports.allUsers = async (req, res) => {
+//   // let hola1 = req.params.hola1;
+//   try {
+//     const hola1 = await USUARIOS_TTO_DIRECCIONES.findAll();
+//     console.log(hola1);
+//   } catch (error) {
+//     console.log(error);
+//   }
+// };
+
+// exports.allUsers = async (req, res) => {
+//   // let hola1 = req.params.hola1;
+//   try {
+//     const hola1 = await LIC_CONDUCCION.findAll();
+//     console.log(hola1);
+//   } catch (error) {
+//     console.log(error);
+//   }
+// };
