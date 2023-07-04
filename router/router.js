@@ -17,6 +17,8 @@ router.get("/ip", UserRMI.ip);
 router.post("/sigin", Auth.Sigin);
 //////////////////////DIRECCIONES/////////////////////
 router.delete("/direcciones/:ID_USUARIO", DireccionesController.eliminarDir);
+router.get("/direcciones", DireccionesController.alladdres);
+router.post("/direcciones", DireccionesController.insertaddres);
 ///////////////////LICENCIAS CONDUCCION/////////////////////////////
 router.post("/lic_conduccion", LIC.createLIC);
 router.delete("/lic_conduccion/:ID_USUARIO", LIC.delete_Lic);

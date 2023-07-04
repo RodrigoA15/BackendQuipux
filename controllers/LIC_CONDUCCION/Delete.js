@@ -1,5 +1,6 @@
 const LIC_CONDUCCION = require("../../models/Licencias_Conduccion/LIC_CONDUCCION.js");
 const sequelize = require("../../config/Connection.js");
+const { QueryTypes } = require("sequelize");
 
 exports.createLIC = async (req, res) => {
   const reqdatos = req.body;
@@ -34,14 +35,24 @@ exports.allLicencias = async (req, res) => {
   const { ID_USUARIO } = req.params;
 
   try {
-   const licencias =  await sequelize.query(
+    const licencias = await sequelize.query(
       "SELECT * FROM LIC_CONDUCCION WHERE ID_USUARIO =:ID_USUARIO",
       {
         replacements: { ID_USUARIO },
+        type: QueryTypes.SELECT,
       }
     );
-    res.json(licencias);
+
+    if (licencias.length > 0) {
+      res.json(licencias);
+    } else {
+      res.status(404).json({
+        message:
+          "No se encontraron licencias para el ID de usuario proporcionado",
+      });
+    }
   } catch (error) {
-    console.log(error);
+    console.error("Error en la consulta:", error);
+    res.status(500).send(`Error en la consulta, ${error}`);
   }
 };

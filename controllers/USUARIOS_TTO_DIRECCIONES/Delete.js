@@ -1,4 +1,6 @@
+const { DataTypes, QueryTypes } = require("sequelize");
 const sequelize = require("../../config/Connection.js");
+const USUARIOS_TTO_DIRECCIONES = require("../../models/Direcciones/USUARIOS_TTO_DIRECCIONES.js");
 
 exports.eliminarDir = async (req, res) => {
   const { ID_USUARIO } = req.params;
@@ -17,4 +19,41 @@ exports.eliminarDir = async (req, res) => {
   }
 };
 
+exports.alladdres = async (req, res) => {
+  const { ID_USUARIO } = req.params;
+  try {
+    const direcciones = await sequelize.query(
+      "SELECT * FROM USUARIOS_TTO_DIRECCIONES ",
+      {
+        replacements: { ID_USUARIO },
+        type: QueryTypes.SELECT,
+      }
+    );
 
+    if (direcciones.length > 0) {
+      res.json(direcciones);
+    } else {
+      res.status(404).json({
+        message:
+          "No se encontraron direcciones para el ID de usuario proporcionado",
+      });
+    }
+  } catch (error) {
+    console.log(`Error en la consulta ${error}`);
+  }
+};
+
+exports.insertaddres = async (req, res) => {
+  const data = req.body;
+  try {
+    const consulta = await USUARIOS_TTO_DIRECCIONES.create(data);
+
+    if (consulta) {
+      res.json("Direccion creada");
+    } else {
+      res.json("Hubo un error");
+    }
+  } catch (error) {
+    res.json(error);
+  }
+};
