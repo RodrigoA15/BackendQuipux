@@ -11,16 +11,16 @@ router.get("/compa/:NRO_COMPARENDO_MOROSO", ComparendosController.comparendos);
 router.put("/compa/:NRO_COMPARENDO_MOROSO", ComparendosController.edit_morosos);
 
 /////////////////////////////USUARIOS RMI////////////////////////////////
-router.get("/users", UserRMI.allUsers);
-router.get("/ip", UserRMI.ip);
+// router.get("/users", UserRMI.allUsers);
+// router.get("/ip", UserRMI.ip);
 ////////////////////////////
-router.post("/sigin", Auth.Sigin);
+// router.post("/sigin", Auth.Sigin);
 //////////////////////DIRECCIONES/////////////////////
 router.delete("/direcciones/:ID_USUARIO", DireccionesController.eliminarDir);
-router.get("/direcciones", DireccionesController.alladdres);
-router.post("/direcciones", DireccionesController.insertaddres);
+router.get("/direcciones/:ID_USUARIO", DireccionesController.alladdres);
+// router.post("/direcciones", DireccionesController.insertaddres);
 ///////////////////LICENCIAS CONDUCCION/////////////////////////////
-router.post("/lic_conduccion", LIC.createLIC);
+// router.post("/lic_conduccion", LIC.createLIC);
 router.delete("/lic_conduccion/:ID_USUARIO", LIC.delete_Lic);
 router.get("/lic_conduccion/:ID_USUARIO", LIC.allLicencias);
 

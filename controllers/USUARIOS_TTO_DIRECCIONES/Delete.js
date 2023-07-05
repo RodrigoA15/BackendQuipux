@@ -23,7 +23,7 @@ exports.alladdres = async (req, res) => {
   const { ID_USUARIO } = req.params;
   try {
     const direcciones = await sequelize.query(
-      "SELECT * FROM USUARIOS_TTO_DIRECCIONES ",
+      "SELECT * FROM USUARIOS_TTO_DIRECCIONES WHERE ID_USUARIO =:ID_USUARIO",
       {
         replacements: { ID_USUARIO },
         type: QueryTypes.SELECT,
@@ -43,17 +43,17 @@ exports.alladdres = async (req, res) => {
   }
 };
 
-exports.insertaddres = async (req, res) => {
-  const data = req.body;
-  try {
-    const consulta = await USUARIOS_TTO_DIRECCIONES.create(data);
+// exports.insertaddres = async (req, res) => {
+//   const data = req.body;
+//   try {
+//     const consulta = await USUARIOS_TTO_DIRECCIONES.create(data);
 
-    if (consulta) {
-      res.json("Direccion creada");
-    } else {
-      res.json("Hubo un error");
-    }
-  } catch (error) {
-    res.json(error);
-  }
-};
+//     if (consulta) {
+//       res.json("Direccion creada");
+//     } else {
+//       res.json("Hubo un error");
+//     }
+//   } catch (error) {
+//     res.json(error);
+//   }
+// };

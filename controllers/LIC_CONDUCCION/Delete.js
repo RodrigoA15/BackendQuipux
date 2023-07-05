@@ -2,18 +2,18 @@ const LIC_CONDUCCION = require("../../models/Licencias_Conduccion/LIC_CONDUCCION
 const sequelize = require("../../config/Connection.js");
 const { QueryTypes } = require("sequelize");
 
-exports.createLIC = async (req, res) => {
-  const reqdatos = req.body;
+// exports.createLIC = async (req, res) => {
+//   const reqdatos = req.body;
 
-  await LIC_CONDUCCION.create(reqdatos)
-    .then((succ) => {
-      res.status(200).json("creado");
-    })
-    .catch((err) => {
-      res.json(err);
-      console.log(err);
-    });
-};
+//   await LIC_CONDUCCION.create(reqdatos)
+//     .then((succ) => {
+//       res.status(200).json("creado");
+//     })
+//     .catch((err) => {
+//       res.json(err);
+//       console.log(err);
+//     });
+// };
 
 exports.delete_Lic = async (req, res) => {
   const { ID_USUARIO } = req.params;
