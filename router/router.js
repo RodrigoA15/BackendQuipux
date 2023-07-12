@@ -1,6 +1,6 @@
 const router = require("express").Router();
 
-const ComparendosController = require("../controllers/ComparendosController.js");
+const ComparendosController = require("../controllers/Morosos/ComparendosController");
 const UserRMI = require("../controllers/UsuarioRMI.js");
 const Auth = require("../controllers/Auth/Login.js");
 const DireccionesController = require("../controllers/USUARIOS_TTO_DIRECCIONES/Delete.js");
@@ -9,6 +9,7 @@ const LIC = require("../controllers/LIC_CONDUCCION/Delete.js");
 
 router.get("/compa/:NRO_COMPARENDO_MOROSO", ComparendosController.comparendos);
 router.put("/compa/:NRO_COMPARENDO_MOROSO", ComparendosController.edit_morosos);
+router.get("/fecha", ComparendosController.fecha_modificacion);
 
 /////////////////////////////USUARIOS RMI////////////////////////////////
 // router.get("/users", UserRMI.allUsers);
