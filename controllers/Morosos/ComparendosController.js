@@ -1,5 +1,6 @@
 const { QueryTypes } = require("sequelize");
 const sequelize = require("../../config/Connection.js");
+const Morosos = require("../../models/Morosos/Morosos.js");
 
 exports.comparendos = async (req, res) => {
   try {
@@ -18,6 +19,7 @@ exports.comparendos = async (req, res) => {
   }
 };
 
+//Update correspondiente a la DB de QX
 exports.edit_morosos = async (req, res) => {
   const { NRO_COMPARENDO_MOROSO } = req.params;
   const { ESTADO_MOROSO, OBSERVACION } = req.body;
@@ -62,5 +64,92 @@ exports.fecha_modificacion = async (req, res) => {
   } catch (error) {
     console.error("Error en la consulta:", error);
     res.status(500).send(`Error en la consulta, ${error}`);
+  }
+};
+
+//Querys De MONGODB >>>>>
+
+//Crear Comparendos Morosos
+exports.createMoroso = async (req, res) => {
+  const {
+    NRO_COMPARENDO_MOROSOS,
+    ID_USUARIO_MOROSO,
+    ESTADO_COMPARENDO,
+    FECHA_COMPARENDO,
+    FECHA_PAGO,
+    OBSERVACIONES,
+    ESTADO,
+  } = req.body;
+
+  try {
+    const response = await Morosos.create({
+      NRO_COMPARENDO_MOROSOS,
+      ID_USUARIO_MOROSO,
+      ESTADO_COMPARENDO,
+      FECHA_COMPARENDO,
+      FECHA_PAGO,
+      OBSERVACIONES,
+      ESTADO,
+    });
+
+    if (response) {
+      res.status(200).json({ message: "Creado ", response });
+    } else {
+      res.json("No se pudo crear");
+    }
+  } catch (error) {
+    console.log("Hubo Error: " + error);
+  }
+};
+
+//Listado de morosos
+exports.allMorosos = async (req, res) => {
+  const morosos = await Morosos.find({});
+  try {
+    if (morosos.length > 0) {
+      res.status(200).json({ message: "Listado de Morosos", morosos });
+    } else {
+      res.status(404).json({ message: "Not found " });
+    }
+  } catch (error) {
+    res
+      .status(500)
+      .send({ message: "Hubo un error al traer el listado: " + error });
+  }
+};
+
+//Mostrar morosos por id
+exports.MorososByid = async (req, res) => {
+  const id_moroso = req.params.id_moroso;
+
+  try {
+    const response = await Morosos.find({ _id: id_moroso });
+
+    if (response.length > 0) {
+      res.status(200).send({ message: "Morosos", response });
+    } else {
+      res.status(404).send({ message: "No se encontro el moroso" });
+    }
+  } catch (error) {
+    console.log("Hubo un error: ", error);
+  }
+};
+
+//Actualizar Estado para manejar notificaciones
+
+exports.UpdateState = async (req, res) => {
+  const id_moroso = req.params.id_moroso;
+  const { ESTADO } = req.body;
+  try {
+    const updating = await Morosos.find({ _id: id_moroso });
+
+    if (updating.length > 0) {
+      await Morosos.findByIdAndUpdate(id_moroso, { ESTADO });
+      res.status(200).json({ message: "Estado Actualizado Correctamente" });
+    } else {
+      res.status(404).json({ message: "No se encontro el comparendo" });
+    }
+  } catch (error) {
+    console.log("Hubo un error al actualizar El estado ", error);
   }
 };

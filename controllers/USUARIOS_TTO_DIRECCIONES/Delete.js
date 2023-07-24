@@ -1,6 +1,5 @@
 const { DataTypes, QueryTypes } = require("sequelize");
 const sequelize = require("../../config/Connection.js");
-const USUARIOS_TTO_DIRECCIONES = require("../../models/Direcciones/USUARIOS_TTO_DIRECCIONES.js");
 
 exports.eliminarDir = async (req, res) => {
   const { ID_USUARIO } = req.params;
