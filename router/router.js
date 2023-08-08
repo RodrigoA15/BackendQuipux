@@ -3,6 +3,7 @@ const router = require("express").Router();
 const ComparendosController = require("../controllers/Morosos/ComparendosController");
 const DireccionesController = require("../controllers/USUARIOS_TTO_DIRECCIONES/Delete.js");
 const LIC = require("../controllers/LIC_CONDUCCION/Delete.js");
+const ACLARATORIOS = require("../controllers/ACLARATORIOS/aclaratorios.controller.js");
 
 ////////////////////////////////////ComparendosController//////////////////////////////////
 
@@ -26,5 +27,9 @@ router.get("/direcciones/:ID_USUARIO", DireccionesController.alladdres);
 
 router.delete("/lic_conduccion/:ID_USUARIO", LIC.delete_Lic);
 router.get("/lic_conduccion/:ID_USUARIO", LIC.allLicencias);
+
+///////////////////ACLARATORIOS///////////////////////
+router.post("/aclaratorios", ACLARATORIOS.CreateAclaratorio);
+router.get("/aclaratorioS/:ID_USUARIO", ACLARATORIOS.GetAclaratorio);
 
 module.exports = router;
