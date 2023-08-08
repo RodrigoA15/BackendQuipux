@@ -1,8 +1,7 @@
 const mongoose = require("mongoose");
-var Schema = mongoose.Schema;
 
-var Morosos = Schema({
-  NRO_COMPARENDO_MOROSOS: {
+var Morosos = new mongoose.Schema({
+  NRO_COMPARENDO_MOROSO: {
     type: String,
     required: true,
   },
@@ -12,7 +11,7 @@ var Morosos = Schema({
     required: true,
   },
 
-  ESTADO_COMPARENDO: {
+  ESTADO_MOROSO: {
     type: String,
     required: true,
   },
@@ -27,7 +26,12 @@ var Morosos = Schema({
     required: true,
   },
 
-  OBSERVACIONES: {
+  NRO_FACTURA: {
+    type: String,
+    required: true,
+  },
+
+  OBSERVACION: {
     type: String,
     required: true,
   },

@@ -6,13 +6,16 @@ const LIC = require("../controllers/LIC_CONDUCCION/Delete.js");
 
 ////////////////////////////////////ComparendosController//////////////////////////////////
 
-router.get("/compa/:NRO_COMPARENDO_MOROSO", ComparendosController.comparendos);
+router.get("/compa/:ID_USUARIO_MOROSO", ComparendosController.comparendos);
 router.put("/compa/:NRO_COMPARENDO_MOROSO", ComparendosController.edit_morosos);
 router.get("/fecha", ComparendosController.fecha_modificacion);
 router.post("/moroso", ComparendosController.createMoroso);
 router.get("/moroso", ComparendosController.allMorosos);
 router.get("/moroso/:id_moroso", ComparendosController.MorososByid);
-router.put("/moroso/:id_moroso", ComparendosController.UpdateState);
+router.put("/moroso/:_id", ComparendosController.UpdateState);
+////////////Querys State Morosos//////////////////////
+router.get("/state", ComparendosController.getState);
+router.get("/states", ComparendosController.getStateSuccess);
 
 //////////////////////DIRECCIONES/////////////////////
 

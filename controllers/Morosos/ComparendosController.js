@@ -4,11 +4,11 @@ const Morosos = require("../../models/Morosos/Morosos.js");
 
 exports.comparendos = async (req, res) => {
   try {
-    let { NRO_COMPARENDO_MOROSO } = req.params;
+    let { ID_USUARIO_MOROSO } = req.params;
     const resultados = await sequelize.query(
-      "SELECT * FROM MOROSOS INNER JOIN COMPARENDOS ON MOROSOS.NRO_COMPARENDO_MOROSO = COMPARENDOS.NRO_COMPARENDO WHERE NRO_COMPARENDO_MOROSO = :NRO_COMPARENDO_MOROSO  ",
+      "SELECT * FROM MOROSOS INNER JOIN COMPARENDOS ON MOROSOS.NRO_COMPARENDO_MOROSO = COMPARENDOS.NRO_COMPARENDO WHERE ID_USUARIO_MOROSO = :ID_USUARIO_MOROSO",
       {
-        replacements: { NRO_COMPARENDO_MOROSO },
+        replacements: { ID_USUARIO_MOROSO },
         type: QueryTypes.SELECT,
       }
     );
@@ -72,23 +72,25 @@ exports.fecha_modificacion = async (req, res) => {
 //Crear Comparendos Morosos
 exports.createMoroso = async (req, res) => {
   const {
-    NRO_COMPARENDO_MOROSOS,
+    NRO_COMPARENDO_MOROSO,
     ID_USUARIO_MOROSO,
-    ESTADO_COMPARENDO,
+    ESTADO_MOROSO,
     FECHA_COMPARENDO,
     FECHA_PAGO,
-    OBSERVACIONES,
+    NRO_FACTURA,
+    OBSERVACION,
     ESTADO,
   } = req.body;
 
   try {
     const response = await Morosos.create({
-      NRO_COMPARENDO_MOROSOS,
+      NRO_COMPARENDO_MOROSO,
       ID_USUARIO_MOROSO,
-      ESTADO_COMPARENDO,
+      ESTADO_MOROSO,
       FECHA_COMPARENDO,
       FECHA_PAGO,
-      OBSERVACIONES,
+      NRO_FACTURA,
+      OBSERVACION,
       ESTADO,
     });
 
@@ -138,18 +140,53 @@ exports.MorososByid = async (req, res) => {
 //Actualizar Estado para manejar notificaciones
 
 exports.UpdateState = async (req, res) => {
-  const id_moroso = req.params.id_moroso;
+  const _id = req.params._id;
   const { ESTADO } = req.body;
   try {
-    const updating = await Morosos.find({ _id: id_moroso });
+    const updating = await Morosos.find({ _id: _id });
 
     if (updating.length > 0) {
-      await Morosos.findByIdAndUpdate(id_moroso, { ESTADO });
+      await Morosos.findByIdAndUpdate(_id, { ESTADO });
+      console.log(_id);
       res.status(200).json({ message: "Estado Actualizado Correctamente" });
     } else {
-      res.status(404).json({ message: "No se encontro el comparendo" });
+      res.status(404).json({ message: "No se encontro el usuario" });
     }
   } catch (error) {
     console.log("Hubo un error al actualizar El estado ", error);
+  }
+};
+
+//Querys para listar por estados >>>>>
+
+exports.getState = async (req, res) => {
+  try {
+    const state = await Morosos.find({
+      ESTADO: 1,
+    });
+
+    if (state.length > 0) {
+      res.status(200).json(state);
+    } else {
+      res.status(404).send({ message: "NO hay Notificaciones pendientes" });
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+exports.getStateSuccess = async (req, res) => {
+  try {
+    const state = await Morosos.find({
+      ESTADO: 2,
+    });
+
+    if (state.length > 0) {
+      res.status(200).json(state);
+    } else {
+      res.status(404).send({ message: "NO hay Notificaciones realizadas" });
+    }
+  } catch (error) {
+    console.log("error en la consulta", error);
   }
 };
