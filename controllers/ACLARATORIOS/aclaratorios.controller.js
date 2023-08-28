@@ -4,7 +4,7 @@ const Aclaratorios = require("../../models/Aclaratorios/Aclaratorios.js");
 
 //Consulta BDD QX_TTO
 
-exports.GetAclaratorio = async (req, res) => {
+exports.GetContraventores = async (req, res) => {
   const { ID_USUARIO } = req.params;
   try {
     const aclaratorios = await sequelize.query(
@@ -29,6 +29,92 @@ exports.GetAclaratorio = async (req, res) => {
     return res.status(200).json(aclaratorios);
   } catch (error) {
     res.status(500).json("Error: " + error.message);
+  }
+};
+exports.GetPendienteAclt = async (req, res) => {
+  const { IDENTIFICADOR_MODIFICADO } = req.params;
+  try {
+    const pendientes = await sequelize.query(
+      `SELECT  
+      auditoria_modificaciones.identificador_modificado,
+      comparendos.fecha as Fechacomparendo,
+      agentes_tto.placa_agente,
+      agentes_tto.nombres|| agentes_tto.apellidos AS Nombres,
+      quipux.tipo_infraccion.cod_simit,
+      comparendos.estado_comparendo,
+      tipo_estado_comparendo.descripcion_estado,
+      auditoria_modificaciones.consecutivo_modificacion, 
+      auditoria_modificaciones.id_usuario_qx, 
+      auditoria_modificaciones.fecha_modificacion, 
+      auditoria_modificaciones.descripcion_modificacion,
+      comparendos.observaciones_comparendo
+      FROM auditoria_modificaciones 
+      INNER JOIN comparendos on auditoria_modificaciones.identificador_modificado = comparendos.nro_comparendo
+      INNER join QUIPUX.agentes_tto on comparendos.id_agente = agentes_tto.id_agente
+      INNER JOIN QUIPUX.infracciones_comparendos on comparendos.nro_comparendo = infracciones_comparendos.nro_comparendo
+      INNER join quipux.tipo_infraccion on infracciones_comparendos.id_infraccion = tipo_infraccion.id_infraccion
+      INNER join QUIPUX.tipo_estado_comparendo on comparendos.estado_comparendo = tipo_estado_comparendo.estado_comparendo
+      WHERE  auditoria_modificaciones.identificador_modificado = :IDENTIFICADOR_MODIFICADO `,
+      {
+        replacements: {
+          IDENTIFICADOR_MODIFICADO,
+        },
+        type: QueryTypes.SELECT,
+      }
+    );
+    console.log(IDENTIFICADOR_MODIFICADO);
+    if (pendientes.length === 0) {
+      res.status(404).json("NO hay Comparendos");
+    } else {
+      res.status(200).json(pendientes);
+    }
+  } catch (error) {
+    res.status(500).json(error);
+    console.log(error);
+  }
+};
+
+exports.SetPendienteAclt = async (req, res) => {
+  const { CONSECUTIVO_MODIFICACION } = req.params;
+  const { DESCRIPCION_MODIFICACION } = req.body;
+
+  try {
+    await sequelize.query(
+      "UPDATE AUDITORIA_MODIFICACIONES SET DESCRIPCION_MODIFICACION =:DESCRIPCION_MODIFICACION WHERE CONSECUTIVO_MODIFICACION = :CONSECUTIVO_MODIFICACION",
+      {
+        replacements: {
+          CONSECUTIVO_MODIFICACION,
+          DESCRIPCION_MODIFICACION,
+        },
+      }
+    );
+    console.log("SIUUU" + DESCRIPCION_MODIFICACION);
+    res.status(200).json("Descripcion actualizada correctamente");
+  } catch (error) {
+    res.status(500).json(`Error de server ${error}`);
+  }
+};
+
+exports.Aclaratorios = async (req, res) => {
+  const { IDENTIFICADOR_MODIFICADO } = req.params;
+  try {
+    const consulta = await sequelize.query(
+      `SELECT DESCRIPCION_MODIFICACION,IDENTIFICADOR_MODIFICADO, CONSECUTIVO_MODIFICACION FROM QUIPUX.AUDITORIA_MODIFICACIONES 
+      WHERE DESCRIPCION_MODIFICACION LIKE '%PENDIENTE ACLARATORIO%' 
+      AND IDENTIFICADOR_MODIFICADO = :IDENTIFICADOR_MODIFICADO `,
+      {
+        replacements: { IDENTIFICADOR_MODIFICADO },
+        type: QueryTypes.SELECT,
+      }
+    );
+    if (consulta.length > 0) {
+      res.status(200).json(consulta);
+    } else {
+      res.status(404).json("Este comparendo no tiene Aclaratorios Pendientes");
+    }
+  } catch (error) {
+    console.log(`Error Aclaratorios ${error}`);
+    res.status(500).json(error);
   }
 };
 

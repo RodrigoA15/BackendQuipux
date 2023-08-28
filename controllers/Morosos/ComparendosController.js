@@ -94,7 +94,7 @@ exports.createMoroso = async (req, res) => {
       ESTADO,
     });
 
-    if (response) {
+    if (response.length > 0) {
       res.status(200).json({ message: "Creado ", response });
     } else {
       res.json("No se pudo crear");

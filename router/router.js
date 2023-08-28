@@ -30,6 +30,9 @@ router.get("/lic_conduccion/:ID_USUARIO", LIC.allLicencias);
 
 ///////////////////ACLARATORIOS///////////////////////
 router.post("/aclaratorios", ACLARATORIOS.CreateAclaratorio);
-router.get("/aclaratorioS/:ID_USUARIO", ACLARATORIOS.GetAclaratorio);
+router.get("/aclaratorios/:ID_USUARIO", ACLARATORIOS.GetContraventores);
+router.get("/pendienteAclt/:IDENTIFICADOR_MODIFICADO", ACLARATORIOS.GetPendienteAclt);
+router.put("/pendienteAclt/:CONSECUTIVO_MODIFICACION", ACLARATORIOS.SetPendienteAclt)
+router.get("/aclaratorio/:IDENTIFICADOR_MODIFICADO", ACLARATORIOS.Aclaratorios)
 
 module.exports = router;
