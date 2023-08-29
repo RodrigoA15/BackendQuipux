@@ -118,6 +118,22 @@ exports.Aclaratorios = async (req, res) => {
   }
 };
 
+exports.Agentes = async (req, res) => {
+  try {
+    const agentes = await sequelize.query(
+      "SELECT NOMBRES,  APELLIDOS FROM QUIPUX.AGENTES_TTO WHERE ESTADO_AGENTE = 'A'",
+      {
+        type: QueryTypes.SELECT,
+      }
+    );
+    if (agentes.length > 0) return res.status(200).json(agentes);
+    return res.json("No hay agentes");
+  } catch (error) {
+    console.log(error);
+    res.status(500).json(error);
+  }
+};
+
 //QUERYS BDD MONGO>>>>>>>>>>>
 
 exports.CreateAclaratorio = async (req, res) => {
