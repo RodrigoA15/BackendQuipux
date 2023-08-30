@@ -121,12 +121,35 @@ exports.Aclaratorios = async (req, res) => {
 exports.Agentes = async (req, res) => {
   try {
     const agentes = await sequelize.query(
-      "SELECT NOMBRES,  APELLIDOS FROM QUIPUX.AGENTES_TTO WHERE ESTADO_AGENTE = 'A'",
+      "SELECT ID_AGENTE, NOMBRES, APELLIDOS FROM QUIPUX.AGENTES_TTO WHERE ESTADO_AGENTE = 'A'",
       {
         type: QueryTypes.SELECT,
       }
     );
     if (agentes.length > 0) return res.status(200).json(agentes);
+    return res.json("No hay agentes");
+  } catch (error) {
+    console.log(error);
+    res.status(500).json(error);
+  }
+};
+
+//Grafica Actividad >>>>>>>
+
+exports.ActividadDashboard = async (req, res) => {
+  try {
+    const consulta = await sequelize.query(
+      `SELECT TO_CHAR(fecha_modificacion, 'Month') AS mes, COUNT(*) AS modificaciones
+      FROM AUDITORIA_MODIFICACIONES
+      WHERE UPPER(DESCRIPCION_MODIFICACION) LIKE '%RLMFDS%'
+      GROUP BY TO_CHAR(fecha_modificacion, 'Month')
+      ORDER BY modificaciones DESC;`,
+      {
+        type: QueryTypes.SELECT,
+      }
+    );
+
+    if (consulta.length > 0) return res.status(200).json(consulta);
     return res.json("No hay agentes");
   } catch (error) {
     console.log(error);
