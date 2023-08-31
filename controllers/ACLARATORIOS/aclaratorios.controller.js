@@ -31,7 +31,36 @@ exports.GetContraventores = async (req, res) => {
     res.status(500).json("Error: " + error.message);
   }
 };
+
+exports.ValidacionAclt = async (req, res, next) => {
+  const { IDENTIFICADOR_MODIFICADO } = req.params;
+  try {
+    const consulta = await sequelize.query(
+      "SELECT * FROM AUDITORIA_MODIFICACIONES WHERE DESCRIPCION_MODIFICACION LIKE :DESCRIPTION AND IDENTIFICADOR_MODIFICADO = :IDENTIFICADOR_MODIFICADO",
+      {
+        replacements: {
+          DESCRIPTION: "%RLMFDS%",
+          IDENTIFICADOR_MODIFICADO: IDENTIFICADOR_MODIFICADO,
+        },
+        type: QueryTypes.SELECT,
+      }
+    );
+
+    if (consulta.length > 0) {
+      res
+        .status(200)
+        .json({ message: ["Este comparendo ya tiene un aclaratorio"] });
+    } else {
+      next();
+    }
+  } catch (error) {
+    res.json(error);
+    console.log(error);
+  }
+};
+
 exports.GetPendienteAclt = async (req, res) => {
+  console.log("Se ejecutó el siguiente controlador");
   const { IDENTIFICADOR_MODIFICADO } = req.params;
   try {
     const pendientes = await sequelize.query(
@@ -54,7 +83,8 @@ exports.GetPendienteAclt = async (req, res) => {
       INNER JOIN QUIPUX.infracciones_comparendos on comparendos.nro_comparendo = infracciones_comparendos.nro_comparendo
       INNER join quipux.tipo_infraccion on infracciones_comparendos.id_infraccion = tipo_infraccion.id_infraccion
       INNER join QUIPUX.tipo_estado_comparendo on comparendos.estado_comparendo = tipo_estado_comparendo.estado_comparendo
-      WHERE  auditoria_modificaciones.identificador_modificado = :IDENTIFICADOR_MODIFICADO `,
+      WHERE  auditoria_modificaciones.identificador_modificado = :IDENTIFICADOR_MODIFICADO 
+      `,
       {
         replacements: {
           IDENTIFICADOR_MODIFICADO,
@@ -63,10 +93,11 @@ exports.GetPendienteAclt = async (req, res) => {
       }
     );
     console.log(IDENTIFICADOR_MODIFICADO);
-    if (pendientes.length === 0) {
-      res.status(404).json("NO hay Comparendos");
-    } else {
+
+    if (pendientes.length > 0) {
       res.status(200).json(pendientes);
+    } else {
+      res.status(404).json("NO hay Comparendos");
     }
   } catch (error) {
     res.status(500).json(error);
@@ -158,7 +189,7 @@ exports.ActividadDashboard = async (req, res) => {
 };
 
 //QUERYS BDD MONGO>>>>>>>>>>>
-
+//DEPRECATED
 exports.CreateAclaratorio = async (req, res) => {
   const {
     ID_USUARIO,
